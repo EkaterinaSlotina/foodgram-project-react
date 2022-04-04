@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Последние обновления на сайте{% endblock %}
+{% block header %}Последние обновления на сайте{% endblock %}
+{% block content %}
+
+    {% for reciepe in recieps %}
+        <h3>
+            Автор: {{ recipe.author.get_full_name }}
+        </h3>
+        <p>{{ recipe.text|linebreaksbr }}</p>
+        {% if not forloop.last %}<hr>{% endif %}
+    {% endfor %}
+
+{% endblock %}
