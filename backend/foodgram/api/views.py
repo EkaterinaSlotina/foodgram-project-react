@@ -1,14 +1,14 @@
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, status, filters
+from rest_framework import viewsets, filters, mixins, generics
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Tag, Recipe, Ingredient, Favorite, RecipeIngredient
+from .models import Tag, Recipe, Ingredient, Favorite, RecipeIngredient, ShoppingCart
 from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
-from .serializers import TagSerializer, RecipeSerializer, IngredientSerializer, CreateRecipeSerializer, \
+from .serializers import (
+    TagSerializer, RecipeSerializer, IngredientSerializer, CreateRecipeSerializer,
     FavoriteSerializer, ShoppingCartSerializer
+)
 
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -37,64 +37,42 @@ class IngredientViewSet(viewsets.ModelViewSet):
     http_method_names = ['get']
 
 
-class FavoriteApiView(APIView):
+class FavoriteApiView(mixins.ListModelMixin,
+                      mixins.DestroyModelMixin,
+                      generics.GenericAPIView
+                      ):
     permission_classes = [IsAuthenticated, ]
+    queryset = Favorite.objects.all()
+    serializer_class = FavoriteSerializer
 
-    def get(self, request, favorite_recipe_id):
-        user = request.user
-        data = {
-            'recipe': favorite_recipe_id,
-            'user': user.id
-        }
-        serializer = FavoriteSerializer(
-            data=data, context={'request': request}
-        )
-        if not serializer.is_valid():
-            return Response(
-                serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
-    def delete(self, request, favorite_id):
-        user = request.user
-        recipe = get_object_or_404(Recipe, id=favorite_id)
-        Favorite.objects.filter(user=user, recipe=recipe).delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
 
-class ShoppingCartApiView(APIView):
+class ShoppingCartApiView(mixins.ListModelMixin,
+                          mixins.DestroyModelMixin,
+                          generics.GenericAPIView
+                          ):
     permission_classes = [IsAuthenticated, ]
+    queryset = ShoppingCart.objects.all()
+    serializer_class = ShoppingCartSerializer
 
-    def get(self, request, shc_recipe_id):
-        user = request.user
-        data = {
-            'recipe': shc_recipe_id,
-            'user': user.id
-        }
-        serializer = ShoppingCartSerializer(
-            data=data, context={'request': request}
-        )
-        if not serializer.is_valid():
-            return Response(
-                serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
-    def delete(self, request, shc_recipe_id):
-        user = request.user
-        recipe = get_object_or_404(Recipe, id=favorite_id)
-        Favorite.objects.filter(user=user, recipe=recipe).delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
 
 class DownloadShoppingCart(APIView):
     def get(self, request):
         final_list = {}
-        ingredients = RecipeIngredient.objects.filter(recipe__shoping_cart__user=request.user)
+        ingredients = RecipeIngredient.objects.filter(
+            recipe__shoping_cart__user=request.user).values_list(
+            'ingredient__name', 'ingredient__measurement_unit', 'amount')
         for item in ingredients:
             name = item[0]
             if name not in final_list:
