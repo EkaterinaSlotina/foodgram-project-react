@@ -55,7 +55,12 @@ class Subscription(models.Model):
 
     class Meta:
         verbose_name = 'Подписки'
-        UniqueConstraint(fields=['following', 'user'], name='subscription_unique')
+        constraints = [
+            models.UniqueConstraint(
+                fields=('following', 'user'),
+                name='subscription_unique'
+            )
+        ]
 
     def __str__(self):
         return f'{self.user} {self.following}'

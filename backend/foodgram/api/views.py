@@ -1,6 +1,9 @@
+from django.db.models import Sum
 from django.http import HttpResponse
-from rest_framework import viewsets, filters, mixins, generics
+from rest_framework import viewsets, filters, mixins, generics, status
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Tag, Recipe, Ingredient, Favorite, RecipeIngredient, ShoppingCart
@@ -9,6 +12,7 @@ from .serializers import (
     TagSerializer, RecipeSerializer, IngredientSerializer, CreateRecipeSerializer,
     FavoriteSerializer, ShoppingCartSerializer
 )
+from .utils import GetMixin, DeleteMixin
 
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -37,51 +41,43 @@ class IngredientViewSet(viewsets.ModelViewSet):
     http_method_names = ['get']
 
 
-class FavoriteApiView(mixins.ListModelMixin,
-                      mixins.DestroyModelMixin,
-                      generics.GenericAPIView
-                      ):
+class FavoriteApiView(GetMixin, DeleteMixin, APIView):
     permission_classes = [IsAuthenticated, ]
-    queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
+    model = Favorite
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
+    def get_favorite(self, request, *args, **kwargs):
+        return self.get(request, *args, **kwargs)
 
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+    def delete_favorite(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
 
 
-class ShoppingCartApiView(mixins.ListModelMixin,
-                          mixins.DestroyModelMixin,
-                          generics.GenericAPIView
-                          ):
+class ShoppingCartApiView(GetMixin, DeleteMixin, APIView):
     permission_classes = [IsAuthenticated, ]
-    queryset = ShoppingCart.objects.all()
     serializer_class = ShoppingCartSerializer
+    model = ShoppingCart
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
+    def get_shopping_cart(self, request, *args, **kwargs):
+        return self.get(request, *args, **kwargs)
 
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+    def delete_shopping_cart(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
 
 
 class DownloadShoppingCart(APIView):
     def get(self, request):
-        final_list = {}
+        final_list = 'Список покупок:\n\n'
         ingredients = RecipeIngredient.objects.filter(
             recipe__shoping_cart__user=request.user).values_list(
-            'ingredient__name', 'ingredient__measurement_unit', 'amount')
-        for item in ingredients:
-            name = item[0]
-            if name not in final_list:
-                final_list[name] = {
-                    'measurement_unit': item[1],
-                    'amount': item[2]
-            }
-            else:
-                final_list[name]['amount'] += item[2]
+            'ingredient__name', 'ingredient__measurement_unit',
+            'amount').annotate(amount=Sum('amount'))
+        for position, ingredient in enumerate(ingredients, start=1):
+            final_list.append(
+                f' {ingredient["ingredient__name"]}:'
+                f' {ingredient["amount"]}'
+                f' {ingredient["ingredient__measurement_unit"]}\n'
+            )
         response = HttpResponse(final_list, 'Content-Type: text/plain')
         response['Content-Disposition'] = 'attachment; filename="BuyList.txt"'
         return response
