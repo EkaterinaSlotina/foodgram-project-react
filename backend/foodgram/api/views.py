@@ -1,9 +1,7 @@
 from django.db.models import Sum
 from django.http import HttpResponse
-from rest_framework import viewsets, filters, mixins, generics, status
-from rest_framework.generics import get_object_or_404
+from rest_framework import viewsets, filters
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Tag, Recipe, Ingredient, Favorite, RecipeIngredient, ShoppingCart
@@ -66,17 +64,20 @@ class ShoppingCartApiView(GetMixin, DeleteMixin, APIView):
 
 
 class DownloadShoppingCart(APIView):
+    permission_classes = [IsAuthenticated, ]
+
     def get(self, request):
         final_list = 'Список покупок:\n\n'
+        user = request.user
         ingredients = RecipeIngredient.objects.filter(
-            recipe__shoping_cart__user=request.user).values_list(
+            recipe__shopping_cart__user=user).values_list(
             'ingredient__name', 'ingredient__measurement_unit',
-            'amount').annotate(amount=Sum('amount'))
+        ).annotate(total_amount=Sum('amount'))
         for position, ingredient in enumerate(ingredients, start=1):
             final_list.append(
-                f' {ingredient["ingredient__name"]}:'
-                f' {ingredient["amount"]}'
-                f' {ingredient["ingredient__measurement_unit"]}\n'
+                f'{ingredient["ingredient__name"]}:'
+                f'{ingredient["total_amount"]}'
+                f'{ingredient["ingredient__measurement_unit"]}\n'
             )
         response = HttpResponse(final_list, 'Content-Type: text/plain')
         response['Content-Disposition'] = 'attachment; filename="BuyList.txt"'

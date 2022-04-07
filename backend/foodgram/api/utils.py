@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 
-from api.models import Recipe
+from backend.foodgram.api.models import Recipe
 
 
 class GetMixin:

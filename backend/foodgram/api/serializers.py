@@ -1,11 +1,11 @@
 from drf_base64.fields import Base64ImageField
 from rest_framework import serializers
-from users.models import User, Subscription
 
 from .models import (
     Tag, Recipe, Ingredient, RecipeIngredient,
     Favorite, ShoppingCart
 )
+from ..users.models import Subscription, User
 
 
 class UserSerializer(serializers.ModelSerializer):

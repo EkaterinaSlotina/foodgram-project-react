@@ -1,6 +1,6 @@
 from django.urls import path, include
 
-from users.views import SubscriptionsApiView, SubscribeApiView
+from backend.foodgram.users.views import SubscriptionsApiView, SubscribeApiView
 
 urlpatterns = [
     path('', include('djoser.urls')),
