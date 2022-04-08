@@ -5,7 +5,7 @@ from .models import (
     Tag, Recipe, Ingredient, RecipeIngredient,
     Favorite, ShoppingCart
 )
-from ..users.models import Subscription, User
+from users.models import Subscription, User
 
 
 class UserSerializer(serializers.ModelSerializer):

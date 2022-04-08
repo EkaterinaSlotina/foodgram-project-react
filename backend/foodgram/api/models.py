@@ -1,6 +1,6 @@
 from django.db import models
 
-from backend.foodgram.users.models import User
+from users.models import User
 
 
 class Tag(models.Model):
