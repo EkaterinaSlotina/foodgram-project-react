@@ -15,7 +15,7 @@ services:
       - ../frontend/:/app/result_build/
 
   backend:
-    image: katemarenova/yamdb
+    image: katemarenova/foodgram
     restart: always
     volumes:
       - static_value:/code/static/
