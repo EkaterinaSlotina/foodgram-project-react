@@ -12,6 +12,9 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddConstraint(
             model_name='recipeingredient',
-            constraint=models.UniqueConstraint(fields=('recipe', 'ingredient'), name='ingredient_to_recipe'),
+            constraint=models.UniqueConstraint(
+                fields=('recipe', 'ingredient'),
+                name='ingredient_to_recipe'
+            ),
         ),
     ]

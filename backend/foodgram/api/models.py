@@ -5,7 +5,9 @@ from users.models import User
 
 class Tag(models.Model):
     name = models.CharField(max_length=200, unique=True, verbose_name='имя')
-    color = models.CharField(max_length=7, default="#ffffff", verbose_name='цвет')
+    color = models.CharField(
+        max_length=7, default="#ffffff", verbose_name='цвет'
+    )
     slug = models.SlugField(max_length=200, verbose_name='слаг')
 
     class Meta:
@@ -17,7 +19,9 @@ class Tag(models.Model):
 
 class Ingredient(models.Model):
     name = models.CharField(max_length=200, verbose_name='имя')
-    measurement_unit = models.CharField(max_length=200, verbose_name='единица измерения' )
+    measurement_unit = models.CharField(
+        max_length=200, verbose_name='единица измерения'
+    )
 
     def __str__(self):
         return f'{self.name}, {self.measurement_unit}'

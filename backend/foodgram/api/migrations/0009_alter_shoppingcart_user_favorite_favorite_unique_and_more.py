@@ -16,14 +16,24 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='shoppingcart',
             name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='user_shopping_cart', to=settings.AUTH_USER_MODEL, verbose_name='покупатель'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='user_shopping_cart', to=settings.AUTH_USER_MODEL,
+                verbose_name='покупатель'
+            ),
         ),
         migrations.AddConstraint(
             model_name='favorite',
-            constraint=models.UniqueConstraint(fields=('recipe', 'user'), name='favorite_unique'),
+            constraint=models.UniqueConstraint(
+                fields=('recipe', 'user'),
+                name='favorite_unique'
+            ),
         ),
         migrations.AddConstraint(
             model_name='shoppingcart',
-            constraint=models.UniqueConstraint(fields=('recipe', 'user'), name='shopping_cart_unique'),
+            constraint=models.UniqueConstraint(
+                fields=('recipe', 'user'),
+                name='shopping_cart_unique'
+            ),
         ),
     ]

@@ -13,21 +13,33 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='ingredient',
             name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+            field=models.BigAutoField(
+                auto_created=True, primary_key=True,
+                serialize=False, verbose_name='ID'
+            ),
         ),
         migrations.AlterField(
             model_name='recipe',
             name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+            field=models.BigAutoField(
+                auto_created=True, primary_key=True,
+                serialize=False, verbose_name='ID'
+            ),
         ),
         migrations.AlterField(
             model_name='recipeingredient',
             name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+            field=models.BigAutoField(
+                auto_created=True, primary_key=True,
+                serialize=False, verbose_name='ID'
+            ),
         ),
         migrations.AlterField(
             model_name='tag',
             name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+            field=models.BigAutoField(
+                auto_created=True, primary_key=True,
+                serialize=False, verbose_name='ID'
+            ),
         ),
     ]

@@ -16,8 +16,14 @@ class Migration(migrations.Migration):
             name='Subscription',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('following', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='following', to=settings.AUTH_USER_MODEL)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='follower', to=settings.AUTH_USER_MODEL)),
+                ('following', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='following', to=settings.AUTH_USER_MODEL)
+                 ),
+                ('user', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='follower', to=settings.AUTH_USER_MODEL)
+                 ),
             ],
             options={
                 'verbose_name': 'Подписки',

@@ -18,12 +18,18 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='recipe',
             name='author',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='recipes', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='recipes', to=settings.AUTH_USER_MODEL
+            ),
         ),
         migrations.AddField(
             model_name='recipe',
             name='ingredients',
-            field=models.ManyToManyField(related_name='recipes', through='api.RecipeIngredient', to='api.Ingredient'),
+            field=models.ManyToManyField(
+                related_name='recipes', through='api.RecipeIngredient',
+                to='api.Ingredient'
+            ),
         ),
         migrations.AddField(
             model_name='recipe',

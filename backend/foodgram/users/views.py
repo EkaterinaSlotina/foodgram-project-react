@@ -17,8 +17,9 @@ class SubscribeApiView(APIView):
             'following': following_id,
             'user': user.id
         }
-        serializer = SubscriptionSerializer(data=data,
-                                          context={'request': request})
+        serializer = SubscriptionSerializer(
+            data=data, context={'request': request}
+        )
         if not serializer.is_valid():
             return Response(
                 serializer.errors,

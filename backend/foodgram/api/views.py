@@ -4,7 +4,10 @@ from rest_framework import viewsets, filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
-from .models import Tag, Recipe, Ingredient, Favorite, RecipeIngredient, ShoppingCart
+from .models import (
+    Tag, Recipe, Ingredient, Favorite,
+    RecipeIngredient, ShoppingCart
+)
 from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
 from .serializers import (
     TagSerializer, RecipeSerializer, IngredientSerializer, CreateRecipeSerializer,

@@ -80,7 +80,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         user = request.user
         return Favorite.objects.filter(recipe=obj, user=user).exists()
 
-    def get_is_in_shopping_cart(self,obj):
+    def get_is_in_shopping_cart(self, obj):
         request = self.context.get('request')
         if request is None or request.user.is_anonymous:
             return False
@@ -163,5 +163,5 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         return RecipeShortSerializer(
             instance.recipe,
-            context={'request':request}
+            context={'request': request}
         ).data
