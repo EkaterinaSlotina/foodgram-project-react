@@ -64,14 +64,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 DATABASES = {
-       'default': {
+    'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('DB_NAME', 'secret'),
         'USER': os.getenv('POSTGRES_USER', 'secret'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'secret'),
         'HOST': os.getenv('DB_HOST', 'secret'),
         'PORT': os.getenv('DB_PORT', 'secret')
-       }
+    }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -116,8 +116,8 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'users.User'
 
 SIMPLE_JWT = {
-   'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-   'AUTH_HEADER_TYPES': ('Bearer',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
 

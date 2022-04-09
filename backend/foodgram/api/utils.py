@@ -6,7 +6,7 @@ from backend.foodgram.api.models import Recipe
 
 
 class GetMixin:
-    def get(self, request,  pk):
+    def get(self, request, pk):
         user = request.user
         data = {
             'recipe': pk,

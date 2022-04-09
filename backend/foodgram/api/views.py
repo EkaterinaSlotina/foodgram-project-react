@@ -10,8 +10,8 @@ from .models import (
 )
 from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
 from .serializers import (
-    TagSerializer, RecipeSerializer, IngredientSerializer, CreateRecipeSerializer,
-    FavoriteSerializer, ShoppingCartSerializer
+    TagSerializer, RecipeSerializer, IngredientSerializer,
+    CreateRecipeSerializer, FavoriteSerializer, ShoppingCartSerializer
 )
 from .utils import GetMixin, DeleteMixin
 
