@@ -2,10 +2,6 @@ name: Foodgram workflow
 
 on: push
 
-defaults:
-  run:
-    working-directory: worker
-
 jobs:
     test:
         runs-on: ubuntu-latest
@@ -63,7 +59,7 @@ jobs:
                username: ${{ secrets.USER }}
                key: ${{ secrets.SSH_KEY }}
                passphrase: ${{ secrets.PASSPHRASE }}
-               stack_file_name: docker-compose.yaml
+               context: ./infra
                script: |
                  sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram:latest
                  sudo docker-compose stop
