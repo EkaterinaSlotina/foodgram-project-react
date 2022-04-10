@@ -59,7 +59,6 @@ jobs:
                username: ${{ secrets.USER }}
                key: ${{ secrets.SSH_KEY }}
                passphrase: ${{ secrets.PASSPHRASE }}
-               context: ./infra
                script: |
                  sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram:latest
                  sudo docker-compose stop
@@ -72,7 +71,7 @@ jobs:
                  echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
                  echo DB_HOST=${{ secrets.DB_HOST }} >> .env
                  echo DB_PORT=${{ secrets.DB_PORT }} >> .env
-                 sudo docker-compose up -d --buid
+                 cd ./infra && sudo docker-compose up -d --buid
                  sudo docker-compose exec -T backend ./manage.py migrate --noinput
                  sudo docker-compose exec -T backend ./manage.py collectstatic --no-input
                  sudo docker-compose exec -T backend ./manage.py loaddata data/dump.json
