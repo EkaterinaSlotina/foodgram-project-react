@@ -15,7 +15,10 @@ services:
       - ../frontend/:/app/result_build/
 
   backend:
-    image: katemarenova/foodgram
+    #image: katemarenova/foodgram
+    build:
+     context: ../backend/foodgram/
+     dockerfile: Dockerfile
     restart: always
     volumes:
       - static_value:/code/static/
