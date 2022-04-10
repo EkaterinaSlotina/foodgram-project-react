@@ -15,7 +15,6 @@ services:
       - ../frontend/:/app/result_build/
 
   backend:
-    #image: katemarenova/foodgram
     build:
      context: ../backend/foodgram/
      dockerfile: Dockerfile
