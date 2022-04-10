@@ -70,6 +70,7 @@ jobs:
                  echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
                  echo DB_HOST=${{ secrets.DB_HOST }} >> .env
                  echo DB_PORT=${{ secrets.DB_PORT }} >> .env
+                 echo ls
                  sudo docker-compose -f infra/docker-compose.yml up -d
                  sudo docker-compose exec -T backend ./manage.py migrate --noinput
                  sudo docker-compose exec -T backend ./manage.py collectstatic --no-input
