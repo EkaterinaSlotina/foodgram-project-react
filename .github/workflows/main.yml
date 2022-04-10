@@ -2,6 +2,10 @@ name: Foodgram workflow
 
 on: push
 
+defaults:
+  run:
+    working-directory: worker
+
 jobs:
     test:
         runs-on: ubuntu-latest
