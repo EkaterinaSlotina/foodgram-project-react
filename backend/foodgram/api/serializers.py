@@ -94,10 +94,18 @@ class RecipeSerializer(serializers.ModelSerializer):
         return Favorite.objects.filter(recipe=obj, user=user).exists()
 
 
+class AddRecipeIngredientSerializer:
+    id = serializers.PrimaryKeyRelatedField(source='ingredient',
+                                            queryset=Ingredient.objects.all())
+    amount = serializers.IntegerField()
+
+    class Meta:
+        model = RecipeIngredient
+        fields = ('amount', 'id')
+
+
 class CreateRecipeSerializer(serializers.ModelSerializer):
-    ingredients = RecipeIngredientSerializer(
-        source='ingredient_to_recipe', many=True
-    )
+    ingredients = AddRecipeIngredientSerializer(many=True)
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(), many=True
     )
