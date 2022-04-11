@@ -55,9 +55,9 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
 
 
 class RecipeSerializer(serializers.ModelSerializer):
-    #ingredients = RecipeIngredientSerializer(
+    # ingredients = RecipeIngredientSerializer(
     #    many=True, source='ingredient_to_recipe', required=True
-    #)
+    # )
     ingredients = serializers.SerializerMethodField()
     tags = TagSerializer(many=True, read_only=True)
     author = UserSerializer(many=False, read_only=True)
