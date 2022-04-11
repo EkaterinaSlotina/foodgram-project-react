@@ -94,7 +94,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         return Favorite.objects.filter(recipe=obj, user=user).exists()
 
 
-class AddRecipeIngredientSerializer:
+class AddRecipeIngredientSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(source='ingredient',
                                             queryset=Ingredient.objects.all())
     amount = serializers.IntegerField()
