@@ -89,7 +89,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 
 class AddIngredientSerializer(serializers.ModelSerializer):
-    id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
+    id = serializers.PrimaryKeyRelatedField(source='ingredient', queryset=Ingredient.objects.all())
     amount = serializers.IntegerField(min_value=1)
 
     class Meta:
@@ -116,24 +116,26 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         for tag in tags:
             recipe.tags.add(tag)
         for ingredient in ingredients:
+            print('azaz', ingredient)
             RecipeIngredient.objects.create(
                 recipe=recipe, amount=ingredient['amount'],
                 ingredient=ingredient['id'],
             )
+            # recipe.ingredients.add(ingredientToRecipe)
 
     def create(self, validated_data):
         author = self.context.get('request').user
         tags = validated_data.pop('tags')
-        ingredients = validated_data.pop('ingredient_to_recipe')
+        ingredients = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(**validated_data, author=author)
-        self.create_ingr(recipe, tags, ingredients)
+        self.create_ingredients(recipe, tags, ingredients)
         return recipe
 
     def update(self, instance, validated_data):
         tags = validated_data.pop('tags')
-        ingredients = validated_data.pop('ingredient_to_recipe')
+        ingredients = validated_data.pop('ingredients')
         RecipeIngredient.objects.filter(recipe=instance).delete()
-        self.create_ingr(recipe=instance, tags=tags, ingredients=ingredients)
+        self.create_ingredients(recipe=instance, tags=tags, ingredients=ingredients)
         super().update(instance, validated_data)
         return instance
 
