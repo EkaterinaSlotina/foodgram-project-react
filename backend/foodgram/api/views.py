@@ -5,6 +5,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
+from .filters import FavotiteAndShoppingCartFilter
 from .models import (
     Tag, Recipe, Ingredient, Favorite,
     RecipeIngredient, ShoppingCart
@@ -28,6 +29,7 @@ class TagViewSet(viewsets.ModelViewSet):
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     permission_classes = (IsOwnerOrReadOnly,)
+    filter_class = FavotiteAndShoppingCartFilter
 
     def get_serializer_class(self):
         if self.request.method in ('POST', 'PUT', 'PATCH'):
