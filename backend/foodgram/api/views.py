@@ -1,7 +1,7 @@
 from django.db.models import Sum
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, filters, request
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
@@ -75,13 +75,13 @@ class DownloadShoppingCart(APIView):
         final_list = 'Список покупок:\n\n'
         user = request.user
         ingredients = RecipeIngredient.objects.filter(
-            recipe__shopping_cart__user=user).values_list(
+            recipe__shopping_cart__user=user).values(
             'ingredient__name', 'ingredient__measurement_unit',
         ).annotate(total_amount=Sum('amount'))
         for position, ingredient in enumerate(ingredients, start=1):
-            final_list.append(
-                f'{ingredient["ingredient__name"]}:'
-                f'{ingredient["total_amount"]}'
+            final_list += (
+                f'{ingredient["ingredient__name"]} '
+                f'{ingredient["total_amount"]} '
                 f'{ingredient["ingredient__measurement_unit"]}\n'
             )
         response = HttpResponse(final_list, 'Content-Type: text/plain')
