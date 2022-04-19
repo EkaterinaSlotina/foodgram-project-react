@@ -89,17 +89,6 @@ class RecipeSerializer(serializers.ModelSerializer):
         return ShoppingCart.objects.filter(recipe=obj, user=user).exists()
 
 
-
-
-#class AddIngredientSerializer(serializers.ModelSerializer):
-#    id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
-#    amount = serializers.IntegerField(min_value=1)
-#
-#    class Meta:
-#       model = RecipeIngredient
-#       fields = ('id', 'amount')
-
-
 class CreateRecipeSerializer(serializers.ModelSerializer):
     ingredients = RecipeIngredientSerializer(
         source='ingredient_to_recipe', many=True
@@ -122,7 +111,9 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         for tag in tags:
             recipe.tags.add(tag)
         for ingredient in ingredients:
-            ingredient_instance = get_object_or_404(Ingredient, id=ingredient['id'])
+            ingredient_instance = get_object_or_404(
+                Ingredient, id=ingredient['id']
+            )
             RecipeIngredient.objects.get_or_create(
                 recipe=recipe, amount=ingredient['amount'],
                 ingredient=ingredient_instance
@@ -132,19 +123,19 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         author = self.context.get('request').user
         tags = validated_data.pop('tags')
         ingredients_initial = self.initial_data.get('ingredients')
-        ingredients = validated_data.pop('ingredient_to_recipe')
-        print('azaz', ingredients)
+        validated_data.pop('ingredient_to_recipe')
         recipe = Recipe.objects.create(**validated_data, author=author)
         recipe.save()
         self.link_ingredients_and_tags(recipe, tags, ingredients_initial)
-        # super().create(recipe)
         return recipe
 
     def update(self, instance, validated_data):
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
         RecipeIngredient.objects.filter(recipe=instance).delete()
-        self.link_ingredients_and_tags(recipe=instance, tags=tags, ingredients=ingredients)
+        self.link_ingredients_and_tags(
+            recipe=instance, tags=tags, ingredients=ingredients
+        )
         super().update(instance, validated_data)
         return instance
 
