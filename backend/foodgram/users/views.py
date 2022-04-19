@@ -1,4 +1,4 @@
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -35,7 +35,7 @@ class SubscribeApiView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class SubscriptionsApiView(APIView):
+class SubscriptionsApiView(generics.ListAPIView):
     serializer_class = SubscriptionListSerializer
     permission_classes = [IsAuthenticated, ]
 
