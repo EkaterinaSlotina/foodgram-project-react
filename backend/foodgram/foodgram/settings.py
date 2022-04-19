@@ -10,6 +10,7 @@ SECRET_KEY = 'c_cc@3ox4q9mtl$=wg))3_wdf5wq%81-n!v42(57s%yk*c*e!2'
 DEBUG = True
 
 ALLOWED_HOSTS = ['backend', '51.250.31.237', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ALLOWED_HOSTS
 
 INSTALLED_APPS = [
     'users',
