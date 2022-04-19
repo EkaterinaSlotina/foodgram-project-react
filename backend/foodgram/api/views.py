@@ -1,6 +1,7 @@
 from django.db.models import Sum
 from django.http import HttpResponse
-from rest_framework import viewsets, filters
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets, filters, request
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
@@ -21,12 +22,12 @@ class TagViewSet(viewsets.ModelViewSet):
     serializer_class = TagSerializer
     http_method_names = ['get']
     permission_classes = (IsAdminOrReadOnly,)
+    pagination_class = None
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     permission_classes = (IsOwnerOrReadOnly,)
-    serializer_class = RecipeSerializer
 
     def get_serializer_class(self):
         if self.request.method in ('POST', 'PUT', 'PATCH'):
@@ -38,8 +39,9 @@ class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = (IsAdminOrReadOnly,)
-    filter_backends = (filters.SearchFilter,)
     http_method_names = ['get']
+    pagination_class = None
+    filter_backends = [DjangoFilterBackend, ]
 
 
 class FavoriteApiView(GetMixin, DeleteMixin, APIView):

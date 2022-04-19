@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from drf_base64.fields import Base64ImageField
 from rest_framework import serializers
 
@@ -41,7 +42,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
-    id = serializers.PrimaryKeyRelatedField(
+    id = serializers.IntegerField(
         source='ingredient.id', read_only=True
     )
     name = serializers.ReadOnlyField(source='ingredient.name')
@@ -56,7 +57,7 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
 
 class RecipeSerializer(serializers.ModelSerializer):
     ingredients = RecipeIngredientSerializer(
-        many=True, source='ingredient_to_recipe', required=True
+        many=True, source='ingredient_to_recipe',
     )
     tags = TagSerializer(many=True, read_only=True)
     author = UserSerializer(many=False, read_only=True)
@@ -88,17 +89,19 @@ class RecipeSerializer(serializers.ModelSerializer):
         return Favorite.objects.filter(recipe=obj, user=user).exists()
 
 
-class AddIngredientSerializer(serializers.ModelSerializer):
-    id = serializers.PrimaryKeyRelatedField(source='ingredient', queryset=Ingredient.objects.all())
-    amount = serializers.IntegerField(min_value=1)
-
-    class Meta:
-        model = RecipeIngredient
-        fields = ('amount', 'id')
+#class AddIngredientSerializer(serializers.ModelSerializer):
+#    id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
+#    amount = serializers.IntegerField(min_value=1)
+#
+#    class Meta:
+#       model = RecipeIngredient
+#       fields = ('id', 'amount')
 
 
 class CreateRecipeSerializer(serializers.ModelSerializer):
-    ingredients = AddIngredientSerializer(many=True)
+    ingredients = RecipeIngredientSerializer(
+        source='ingredient_to_recipe', many=True
+    )
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(), many=True
     )
@@ -107,35 +110,39 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'ingredients', 'tags', 'image',
-            'name', 'text', 'cooking_time'
+            'name', 'text', 'cooking_time',
         )
         model = Recipe
         read_only_fields = ('id',)
 
-    def create_ingredients(self, recipe, tags, ingredients):
+    @staticmethod
+    def link_ingredients_and_tags(recipe, tags, ingredients):
         for tag in tags:
             recipe.tags.add(tag)
         for ingredient in ingredients:
-            print('azaz', ingredient)
-            RecipeIngredient.objects.create(
+            ingredient_instance = get_object_or_404(Ingredient, id=ingredient['id'])
+            RecipeIngredient.objects.get_or_create(
                 recipe=recipe, amount=ingredient['amount'],
-                ingredient=ingredient['id'],
+                ingredient=ingredient_instance
             )
-            # recipe.ingredients.add(ingredientToRecipe)
 
     def create(self, validated_data):
         author = self.context.get('request').user
         tags = validated_data.pop('tags')
-        ingredients = validated_data.pop('ingredients')
+        ingredients_initial = self.initial_data.get('ingredients')
+        ingredients = validated_data.pop('ingredient_to_recipe')
+        print('azaz', ingredients)
         recipe = Recipe.objects.create(**validated_data, author=author)
-        self.create_ingredients(recipe, tags, ingredients)
+        recipe.save()
+        self.link_ingredients_and_tags(recipe, tags, ingredients_initial)
+        # super().create(recipe)
         return recipe
 
     def update(self, instance, validated_data):
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
         RecipeIngredient.objects.filter(recipe=instance).delete()
-        self.create_ingredients(recipe=instance, tags=tags, ingredients=ingredients)
+        self.link_ingredients_and_tags(recipe=instance, tags=tags, ingredients=ingredients)
         super().update(instance, validated_data)
         return instance
 
