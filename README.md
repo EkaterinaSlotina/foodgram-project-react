@@ -48,7 +48,7 @@ docker-compose exec web python manage.py createsuperuser
 docker-compose exec web python manage.py collectstatic --no-input
 ```
 ### Workflow status
-![foodgram_workflow](https://github.com/EkaterinaSlotina/foodgram-project-react/actions/workflows/main.yaml/badge.svg)
+![foodgram_workflow](https://github.com/EkaterinaSlotina/foodgram-project-react/actions/workflows/main.yml/badge.svg)
 
 ## You can see project here:
 [My project](http://51.250.31.237/)
