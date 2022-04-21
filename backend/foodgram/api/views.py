@@ -2,6 +2,7 @@ from django.db.models import Sum
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
@@ -30,6 +31,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     permission_classes = (IsOwnerOrReadOnly,)
     filter_class = FavotiteAndShoppingCartFilter
+    pagination_class = PageNumberPagination
+    pagination_class.page_size = 6
+    pagination_class.page_size_query_param = 'limit'
 
     def get_serializer_class(self):
         if self.request.method in ('POST', 'PUT', 'PATCH'):
