@@ -63,6 +63,7 @@ class ShoppingCartApiView(GetMixin, DeleteMixin, APIView):
     permission_classes = [IsAuthenticated, ]
     serializer_class = ShoppingCartSerializer
     model = ShoppingCart
+    pagination_class = None
 
     def get_shopping_cart(self, request, *args, **kwargs):
         return self.get(request, *args, **kwargs)
