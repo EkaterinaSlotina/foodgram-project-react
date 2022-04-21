@@ -4,7 +4,7 @@ from datetime import timedelta
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'c_cc@3ox4q9mtl$=wg))3_wdf5wq%81-n!v42(57s%yk*c*e!2'
-#SECRET_KEY = os.getenv('SECRET_KEY', 'default')
+
 
 DEBUG = True
 
@@ -67,28 +67,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
-#DATABASES = {
- #   'default': {
- #       'ENGINE': 'django.db.backends.postgresql',
- #       'NAME': os.getenv('DB_NAME', 'secret'),
- #       'USER': os.getenv('POSTGRES_USER', 'secret'),
- #       'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'secret'),
- #       'HOST': os.getenv('DB_HOST', 'secret'),
- #       'PORT': os.getenv('DB_PORT', 'secret')
- #   }
-#}
-
 DATABASES = {
-
     'default': {
-
-        'ENGINE': 'django.db.backends.sqlite3',
-
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME', 'secret'),
+        'USER': os.getenv('POSTGRES_USER', 'secret'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'secret'),
+        'HOST': os.getenv('DB_HOST', 'secret'),
+        'PORT': os.getenv('DB_PORT', 'secret')
     }
-
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
