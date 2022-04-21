@@ -32,7 +32,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     permission_classes = (IsOwnerOrReadOnly,)
     filter_class = FavotiteAndShoppingCartFilter
     pagination_class = PageNumberPagination
-    # pagination_class.page_size = 6
+    pagination_class.page_size = 6
+    pagination_class.page_size_query_param = 'limit'
 
     def get_serializer_class(self):
         if self.request.method in ('POST', 'PUT', 'PATCH'):
