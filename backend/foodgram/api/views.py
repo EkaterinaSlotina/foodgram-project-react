@@ -5,7 +5,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
-from .filters import FavotiteAndShoppingCartFilter
+from .filters import FavotiteAndShoppingCartFilter, IngredientFilter
 from .models import (
     Tag, Recipe, Ingredient, Favorite,
     RecipeIngredient, ShoppingCart
@@ -44,6 +44,7 @@ class IngredientViewSet(viewsets.ModelViewSet):
     http_method_names = ['get']
     pagination_class = None
     filter_backends = [DjangoFilterBackend, ]
+    filter_class = IngredientFilter
 
 
 class FavoriteApiView(GetMixin, DeleteMixin, APIView):
