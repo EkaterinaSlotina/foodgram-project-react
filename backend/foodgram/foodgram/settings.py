@@ -6,7 +6,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv('SECRET_KEY', 'default')
 
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['backend', '51.250.31.237', '127.0.0.1']
 CSRF_TRUSTED_ORIGINS = ['http://51.250.31.237', 'http://127.0.0.1', 'http://backend']
