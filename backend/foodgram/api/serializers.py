@@ -39,6 +39,7 @@ class TagSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('id', 'name', 'color', 'slug')
         model = Tag
+        lookup_field = 'id'
 
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
