@@ -24,7 +24,7 @@ class FavotiteAndShoppingCartFilter(FilterSet):
         fields = ('tags', 'author', 'is_favorited', 'is_in_shopping_cart')
 
 
-class IngredientFilter(filters.FilterSet):
+class IngredientFilter(FilterSet):
     name = filters.CharFilter(field_name="name", lookup_expr='icontains')
 
     class Meta:
